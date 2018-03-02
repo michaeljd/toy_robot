@@ -5,7 +5,7 @@ There are no other obstructions on the table surface. The robot is free to roam 
 Any movement that would result in the robot falling from the table is prevented, however further valid movement
 commands are still allowed.
 
-## Requirements
+## Specifications
 The application reads a file using a name passed in the command line, the following commands are valid:
 
 ```
@@ -29,6 +29,12 @@ The file is assumed to have ASCII encoding. It is assumed that the PLACE command
 NORTH is an invalid command. All commands must be in upcase, all lower and mixed case commands will be ignored
 
 ## Usage
+This application requires you to have both rabbitmq and mongodb running on localhost.
+
+To enter commands into STDIN:
+`./toyrobot`
+
+To read commands from a file:
 `./toyrobot commands.txt`
 
 ## Testing

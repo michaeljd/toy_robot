@@ -1,13 +1,13 @@
 require 'spec_helper'
+require_relative '../../lib/toy_robot/command_parser'
 
 RSpec.describe ToyRobot::CommandParser do
-  let(:stubbed_robot) { instance_double(ToyRobot::Robot) }
-  subject { ToyRobot::CommandParser.new(stubbed_robot) }
+  subject { ToyRobot::CommandParser.new }
 
   describe '#call' do
     context "when given the 'PLACE' command" do
       it 'instructs the robot to be placed in the specified position' do
-        expect(stubbed_robot).to receive(:place).with(0, 1, 'SOUTH')
+        expect(Squirrel.command_bus).to receive(:call).with kind_of(ToyRobot::Commands::Place)
 
         subject.call('PLACE 0,1,SOUTH')
       end
@@ -15,7 +15,7 @@ RSpec.describe ToyRobot::CommandParser do
 
     context "when given the 'MOVE' command" do
       it 'instructs the robot to move' do
-        expect(stubbed_robot).to receive(:move)
+        expect(Squirrel.command_bus).to receive(:call).with kind_of(ToyRobot::Commands::Move)
 
         subject.call('MOVE')
       end
@@ -23,7 +23,7 @@ RSpec.describe ToyRobot::CommandParser do
 
     context "when given the 'RIGHT' command" do
       it 'instructs the robot to turn right' do
-        expect(stubbed_robot).to receive(:right)
+        expect(Squirrel.command_bus).to receive(:call).with kind_of(ToyRobot::Commands::Right)
 
         subject.call('RIGHT')
       end
@@ -31,7 +31,7 @@ RSpec.describe ToyRobot::CommandParser do
 
     context "when given the 'LEFT' command" do
       it 'instructs the robot to turn left' do
-        expect(stubbed_robot).to receive(:left)
+        expect(Squirrel.command_bus).to receive(:call).with kind_of(ToyRobot::Commands::Left)
 
         subject.call('LEFT')
       end
@@ -39,10 +39,7 @@ RSpec.describe ToyRobot::CommandParser do
 
     context "when given the 'REPORT' command" do
       it 'outputs a string describing the current position and direction' do
-        allow(stubbed_robot).to receive(:report).and_return({ north: 1, east: 2, direction: 'NORTH' })
-
-        expected_output = "Robot is currently at (1, 2) and it's facing NORTH"
-        expect(STDOUT).to receive(:puts).with expected_output
+        expect(Squirrel.command_bus).to receive(:call).with kind_of(ToyRobot::Commands::Report)
 
         subject.call("REPORT")
       end
@@ -50,7 +47,7 @@ RSpec.describe ToyRobot::CommandParser do
 
     context 'when given an invalid command' do
       it 'raises an exception' do
-        expect { subject.call('BING') }.to raise_error(ToyRobot::CommandError)
+        expect { subject.call('BING') }.to raise_error(NameError)
       end
     end
   end

@@ -1,13 +1,18 @@
+require 'stringio'
 require 'spec_helper'
-require_relative '../../lib/toy_robot/file_parser'
+require_relative '../../lib/toy_robot/command_line_parser'
 
-RSpec.describe ToyRobot::FileParser do
-  let(:expected_commands) { ['1', '2', '3', '4'] }
+RSpec.describe ToyRobot::CommandLineParser do
+  let(:expected_commands) { ['one', 'two', 'three', 'four'] }
   let(:stubbed_command_parser) { instance_double(ToyRobot::CommandParser, call: true) }
-  subject { ToyRobot::FileParser.new(stubbed_command_parser, 'test_file.txt') }
+  subject { ToyRobot::CommandLineParser.new(stubbed_command_parser) }
 
   before do
-    allow(File).to receive(:read).and_return(expected_commands.join("\n"))
+    io = StringIO.new
+    expected_commands.each { |cmd| io.puts cmd }
+    io.rewind
+
+    $stdin = io
   end
 
   describe '#call' do

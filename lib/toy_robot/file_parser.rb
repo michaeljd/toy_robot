@@ -6,22 +6,9 @@ module ToyRobot
     end
 
     def call
-      commands = read_commands
+      commands = File.read(@filename).split("\n")
 
-      commands.each(&method(:execute_command))
-    end
-
-    private
-
-    attr_reader :filename, :command_parser
-
-    def read_commands
-      File.read(filename).split("\n")
-    end
-
-    def execute_command(cmd)
-      command_parser.call(cmd)
-    rescue ToyRobot::PlacementError, ToyRobot::PositionError, ToyRobot::CommandError
+      commands.each(&@command_parser.method(:call))
     end
   end
 end
