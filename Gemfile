@@ -6,4 +6,4 @@ group :test do
   gem 'rspec'
 end
 
-ruby '2.4.0'
+ruby '2.4.6'
